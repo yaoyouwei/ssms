@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-2.5.xsd
+          ">
+	<!-- 开启注解支持 -->
+	<context:annotation-config />
+	<bean id="customInvocationSecurityMetadataSource"
+		class="org.jb.common.security.bean.CustomFilterInvocationSecurityMetadataSourceImpl">
+		<property name="sysRoleService" ref="sysRoleService"></property>
+		<property name="mapper" ref="mapper"></property>
+	</bean>
+
+	<bean id="customUserDetailsServiceImpl"
+		class="org.jb.common.security.bean.CustomUserDetailsServiceImpl">
+		<property name="sysUserService" ref="sysUserService"></property>
+		<property name="mapper" ref="mapper"></property>
+	</bean>
+
+	<bean id="customAccessDecisionManagerImpl"
+		class="org.jb.common.security.bean.CustomAccessDecisionManagerImpl">
+	</bean>
+
+	<bean id="md5Encoder" class="org.jb.common.security.encoder.MD5Encoder">
+	</bean>
+
+	<bean id="customFilterSecurityInterceptorImpl"
+		class="org.jb.common.security.filter.CustomFilterSecurityInterceptorImpl">
+		<property name="securityMetadataSource" ref="customInvocationSecurityMetadataSource"></property>
+		<property name="accessDecisionManager" ref="customAccessDecisionManagerImpl" />
+		<property name="authenticationManager" ref="authenticationManager"></property>
+	</bean>
+
+	<security:http auto-config='true'>
+		<!-- 不要过滤图片等静态资源，其中**代表可以跨越目录，*不可以跨越目录。 access="IS_AUTHENTICATED_ANONYMOUSLY":表示匿名访问 
+			注：可以技持正则表达式 -->
+		<!-- 不拦截静态资源 -->
+		<security:intercept-url pattern="/images/**|/**/*.ico|/css/**|/script/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<!-- 不拦截登录页面 -->
+		<security:intercept-url pattern="/login.jsp*|/prelogin.jsp*"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+
+
+		<security:intercept-url pattern="/jmx/*|/sys/*|/basd/*"
+			access="ROLE_ADMIN,ROLE_SUPER" />
+		<security:intercept-url pattern="/rept/*"
+			access="ROLE_MASTER,ROLE_SUPER" />
+		<security:intercept-url pattern="/sale/*"
+			access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
+		<security:intercept-url pattern="/cus/*|/~cust/cust/**"
+			access="ROLE_MAN,ROLE_SUPER" />
+		<security:intercept-url pattern="/service/*"
+			access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
+
+		<security:custom-filter ref="customFilterSecurityInterceptorImpl"
+			before="FILTER_SECURITY_INTERCEPTOR" />
+
+		<!-- 配置登录页面 -->
+		<!-- login-page:默认指定的登录页面. authentication-failure-url:出错后跳转页面. default-target-url:成功登陆后跳转页面. 
+			login-processing-url:发送的登录请求 -->
+		<security:form-login default-target-url="/sys/loginAction.action"
+			login-page="/login.jsp" authentication-failure-url="/prelogin.jsp"
+			login-processing-url="/loginForSpringSecurity" />
+		<!-- 控制session 的并发数量 -->
+		<security:session-management
+			session-fixation-protection="migrateSession">
+			<security:concurrency-control
+				max-sessions="1" expired-url="/prelogin.jsp" />
+		</security:session-management>
+	</security:http>
+
+	<!-- 配置认证管理器 -->
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider
+			user-service-ref="customUserDetailsServiceImpl">
+			<security:password-encoder ref="md5Encoder">
+				<!-- 添加盐值，增强系统的安全性 -->
+				<security:salt-source system-wide="system" />
+			</security:password-encoder>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>
