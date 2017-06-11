@@ -1,4 +1,4 @@
-package org.jb.common.security.encoder;
+package com.forwave.security.encoder;
 
 import java.security.MessageDigest;
 

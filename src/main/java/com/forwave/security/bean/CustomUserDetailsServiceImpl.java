@@ -1,10 +1,14 @@
-package org.jb.common.security.bean;
+package com.forwave.security.bean;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,20 +16,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.forwave.pojo.SysRole;
 import com.forwave.pojo.SysUser;
-import com.forwave.service.ISysRoleServiec;
-import com.forwave.service.IUserService;
+import com.forwave.service.ISysRoleService;
+import com.forwave.service.ISysUserService;
+public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
+	private static Log log = LogFactory.getLog(CustomUserDetailsServiceImpl.class);
 
-public class CustomUserDetailsServiceImpl implements
-		ICustomUserDetailsService {
-
-	private ISysRoleServiec roleService;
+    @Resource
+	private ISysRoleService roleService;
+    @Resource
+   	private ISysUserService sysUserService;
 
 	@Override
 	public UserDetails loadUserByUsername(String loginUserName)
 			throws UsernameNotFoundException {
-		SysUser user = new SysUser();
-		user.setName(loginUserName);
-		//获得当前用户的角色列表在本系统中，只有一个角色)
+		log.info("开始验证用户:["+loginUserName+"]");
+		SysUser user = sysUserService.queryUserByLoginId(loginUserName);
+		if(user == null){
+			throw new UsernameNotFoundException("用户不存在!");
+		}
+		//获得当前用户的角色列表
 		Collection<GrantedAuthority> grantedAuths = obtionGrantedAuthorities(user);
 		user.setAuthorities(grantedAuths);
 		return user;

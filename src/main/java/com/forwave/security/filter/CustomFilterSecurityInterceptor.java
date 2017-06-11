@@ -1,4 +1,4 @@
-package org.jb.common.security.filter;
+package com.forwave.security.filter;
 
 import javax.servlet.Filter;
 

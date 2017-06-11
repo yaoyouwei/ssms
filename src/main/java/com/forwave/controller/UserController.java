@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.forwave.common.utils.Constant;
 import com.forwave.dto.UserDto;
 import com.forwave.pojo.User;
-import com.forwave.service.IUserService;
+import com.forwave.service.ISysUserService;
 
 @Controller
 @RequestMapping({ "user/mgnt" })
 public class UserController{
 	//private static Log logger = LogFactory.getLog(UserController.class);
     //@Resource
-    IUserService userService;
+    ISysUserService userService;
 
 	@RequestMapping(value={ "list.do" }, params = { "r_showUserList" })
 	public String listContact(ModelMap mm) {
@@ -40,7 +40,6 @@ public class UserController{
 	public Map<String,Object> saveUser(User user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-			userService.saveCreationUser(user);
 			result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS, false);
@@ -55,7 +54,6 @@ public class UserController{
 	public Map<String,Object> syncUserList(User user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-			userService.syncUserList();
 			result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS, false);
@@ -70,7 +68,6 @@ public class UserController{
 	public Map<String,Object> updateUser(User user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-			userService.updateUser(user);
 			result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS, false);
@@ -85,7 +82,6 @@ public class UserController{
 	public Map<String,Object> deleteUser(User user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-			userService.deleteUser(user);
 			result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS,false);
@@ -100,7 +96,6 @@ public class UserController{
 	public Map<String,Object> batchDeleteUser(String [] userIds,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-			userService.batchDeleteUser(userIds);
 			result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS,false);
@@ -115,9 +110,6 @@ public class UserController{
 	public Map<String,Object> getUserMapList(UserDto user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
-	    	List<User> userList = userService.getUserList(user,user.getStart(),user.getLimit());
-	    	result.put("rows",userList );
-	    	result.put("total", userService.getUserTotal(user));
 	    	result.put(Constant.SUCCESS, true);
 		} catch (Exception e) {
 			result.put(Constant.SUCCESS, false);

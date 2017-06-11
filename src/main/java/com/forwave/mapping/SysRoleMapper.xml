@@ -11,7 +11,7 @@
 		<result property="lastUpdateDate" column="last_update_date" />
 	</resultMap>
 	
-	<select id="queryRoleListByUser" parameterType="com.forwave.pojo.SysRole" resultMap="sysRoleResultMap">
+	<select id="queryRoleListByUser" parameterType="com.forwave.pojo.SysUser" resultMap="sysRoleResultMap">
          SELECT r.* FROM sys_role r 
 		 INNER JOIN  sys_role_user ru ON r.id=ru.role_id
 		 INNER JOIN sys_user u  ON u.id= ru.user_id
@@ -22,11 +22,34 @@
            <if test='name != null and name !="" '>
                and u.name = #{name}
            </if>
-           <if test='enabled != null and enabled !="" '>
-               and u.enabled = #{enabled}
+           <if test='delFlag != null and delFlag !="" '>
+               and u.del_flag = #{delFlag}
            </if>
         </where> 
     </select>
+    
+   	<select id="queryRoleList" parameterType="com.forwave.pojo.SysRole" resultMap="sysRoleResultMap">
+         SELECT  * FROM sys_role 
+        <where>
+           <if test='id != null and id !="" '>
+               and id = #{id}
+           </if>
+           <if test='name != null and name !="" '>
+               and name = #{name}
+           </if>
+           <if test='roleSecurity != null and roleSecurity !="" '>
+               and role_security = #{roleSecurity}
+           </if>
+           <if test='enabled != null and enabled !="" '>
+               and enabled = #{enabled}
+           </if>
+           <if test='description != null and description !="" '>
+               and description = #{description}
+           </if>
+           
+        </where> 
+    </select>
+    
 	
 	
 </mapper>

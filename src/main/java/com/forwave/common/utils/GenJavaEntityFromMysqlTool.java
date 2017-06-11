@@ -33,7 +33,7 @@ public class GenJavaEntityFromMysqlTool {
 	private boolean f_sql = false; // 是否需要导入包java.sql.*
     
     //数据库连接
-	private static final String URL ="jdbc:mysql://localhost:3306/smms";
+	private static final String URL ="jdbc:mysql://localhost:3306/ssms";
 	private static final String NAME = "root";
 	private static final String PASS = "root";
 	private static final String DRIVER ="com.mysql.jdbc.Driver";
@@ -302,8 +302,9 @@ public class GenJavaEntityFromMysqlTool {
 	 */
 	public static void main(String[] args) {
 		
-		new GenJavaEntityFromMysqlTool("sys_role");
+		//new GenJavaEntityFromMysqlTool("sys_role");
 		new GenJavaEntityFromMysqlTool("sys_user");
+		//new GenJavaEntityFromMysqlTool("sys_permission");
 		/*System.out.println(GenJavaEntityFromMysqlTool.toLowerCamelCase("sys_user__role___"));
 		System.out.println(GenJavaEntityFromMysqlTool.toUpperCamelCase("sys_user__role___"));*/
 	}

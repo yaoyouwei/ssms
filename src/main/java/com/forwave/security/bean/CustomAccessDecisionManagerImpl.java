@@ -1,27 +1,27 @@
-package org.jb.common.security.bean;
+package com.forwave.security.bean;
 
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-
-public class CustomAccessDecisionManagerImpl implements
-		ICustomAccessDecisionManager {
-
+public class CustomAccessDecisionManagerImpl implements ICustomAccessDecisionManager {
+	private static Log log = LogFactory.getLog(CustomAccessDecisionManagerImpl.class);
 	/**
 	 * 思路:如果该页面不需要权限访问,则直接结束
 	 * authentication:用户的权限
 	 * configAttributes:访问该资源所需要的权限
 	 */
 	@Override
-	public void decide(Authentication authentication, Object object,
-			Collection<ConfigAttribute> configAttributes)
+	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException {
+		log.error("进入自定义决策器");
 		if (null == configAttributes) {
 			return;
 		}

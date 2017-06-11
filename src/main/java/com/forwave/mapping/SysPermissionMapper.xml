@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forwave.dao.ISysPermissionDao">
+	
+	<resultMap id="sysPermissionResultMap" type="com.forwave.dto.SysPermissionDto">
+		<id property="id" column="id" />
+		<result property="type" column="type" />
+		<result property="actionId" column="action_id" />
+		<result property="url" column="url" />
+	</resultMap>
+	
+	<select id="queryPermissionListByRole" parameterType="com.forwave.pojo.SysRole" resultMap="sysPermissionResultMap">
+        SELECT DISTINCT p.id,p.action_id,m.url FROM  sys_menu m 
+		INNER JOIN sys_permission p ON p.action_id= m.id AND p.type=1
+		INNER JOIN sys_role_permission rp ON  p.id=rp.permission_id
+		INNER JOIN sys_role r ON r.id=rp.role_id 
+        <where>
+           <if test='id != null and id !="" '>
+               and r.id = #{id}
+           </if>
+           <if test='enabled != null and enabled !="" '>
+               and r.enabled = #{enabled}
+           </if>
+        </where> 
+    </select>
+    
+    
+	
+	
+</mapper>

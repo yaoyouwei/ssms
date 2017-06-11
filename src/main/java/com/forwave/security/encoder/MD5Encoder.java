@@ -1,8 +1,8 @@
-package org.jb.common.security.encoder;
+package com.forwave.security.encoder;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.BasePasswordEncoder;
-
+import org.springframework.stereotype.Component;
 public class MD5Encoder extends BasePasswordEncoder {
 
 	public String encodePassword(String origPwd, Object salt)
