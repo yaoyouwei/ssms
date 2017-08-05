@@ -303,7 +303,8 @@ public class GenJavaEntityFromMysqlTool {
 	public static void main(String[] args) {
 		
 		//new GenJavaEntityFromMysqlTool("sys_role");
-		new GenJavaEntityFromMysqlTool("sys_user");
+		//new GenJavaEntityFromMysqlTool("sys_user");
+		new GenJavaEntityFromMysqlTool("sys_menu");
 		//new GenJavaEntityFromMysqlTool("sys_permission");
 		/*System.out.println(GenJavaEntityFromMysqlTool.toLowerCamelCase("sys_user__role___"));
 		System.out.println(GenJavaEntityFromMysqlTool.toUpperCamelCase("sys_user__role___"));*/

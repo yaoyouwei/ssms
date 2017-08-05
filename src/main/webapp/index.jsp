@@ -1,135 +1,98 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
-<%
-	String path = request.getContextPath();
-%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
 <html>
 <head>
-	<title>SSMS @Copyright YaoYouWei</title>
-	<meta charset ="utf-8" />
-	<link type="text/css" href="<%=path %>/script/jquery/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" />
-	<link type="text/css" href="<%=path %>/script/jquery/css/jquery.layout.css" rel="stylesheet" />
-	<link type="text/css" href="<%=path %>/script/jquery/css/myStyle.css" rel="stylesheet" />
-	<script type = "text/javascript"  src = "<%=path %>/script/jquery/src/jquery-1.4.2.min.js"></script>
-	<script type = "text/javascript"  src = "<%=path %>/script/jquery/src/jquery.layout.js"></script>
-	<script type="text/javascript" src="<%=path %>/script/jquery/src/jquery-ui-1.8.5.custom.min.js"></script>
-	<script type = "text/javascript">
-		$(document).ready(function(){
-			
-			
-			
-			//进行权限控制
-			$("#accordion > div").hide();
-			$("#accordion > div li").hide();
-			
-			
-			var splitResult = result.split(",");
-			for(var i = 0 ; i < splitResult.length ; i++){
-				var text = splitResult[i];
-				$("#" + text).show();
-				$("#accordion a:contains('"+text+"')").parent().show();
-			}
-			
-			
-			
-			$('body').layout({
-				applyDefaultStyles:false,
-				north__resizable:false,
-				west__resizable:false,
-				spacing_open:10,//边框的间隙  
-                spacing_closed:20//关闭时边框的间隙  
-			});
-			// Accordion
-			$("#accordion").accordion({
-				header : "h3",
-				collapsible:true,
-				clearStyle:true,
-				active:false
-			});
-			//增加事件
-			$("ol>li>a").click(function(){
-				var pageURL  = this.name;
-				$(".ui-layout-center").html('<iframe src="'+pageURL+'" width="100%" height="100%" frameborder="NO" scrolling="yes"></iframe>');
-			});
-		});
+  <title>首页</title>
+	<jsp:include page="include.jsp"></jsp:include><!-- 位于head标签之间 -->
+	<script type="text/javascript" src="./library/ext-2.0.2/custom/MenuTreePanel.js"></script>
+    <!--<script language="javascript" src="/grid/PropsGrid.js"></script>-->
+	<style type="text/css">
+	html, body {
+        font:normal 12px verdana;
+        margin:0;
+        padding:0;
+        border:0 none;
+        overflow:hidden;
+        height:100%;
+    }
+    .settings {
+        background-image:url(./resources/image/shared/icons/fam/folder_wrench.png);
+    }
+    .nav {
+        background-image:url(./resources/image/shared/icons/fam/folder_go.png);
+    }
+    </style>
+	<script type="text/javascript">
+	
+    Ext.onReady(function(){
+    	
+    	
+       Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+       
+       var southPanel = new Ext.BoxComponent({
+           region:'south',
+           el: 'south',
+           height:20
+       });
+       
+       var northPanel =  new Ext.BoxComponent({ // raw
+           region:'north',
+           el: 'north',
+           height:32
+       });
+       
+       
+       var centerTabPanel = new Ext.TabPanel({
+    	   region:'center',
+    	   activeTab:0,
+           //renderTo:'tabs',
+           deferredRender:false,
+           resizeTabs:true, // turn on tab resizing
+           minTabWidth: 115,
+           tabWidth:135,
+           enableTabScroll:true,
+           width:600,
+           height:250,
+           defaults: {autoScroll:true}
+           //plugins: new Ext.ux.TabCloseMenu()
+       });
+       centerTabPanel.add({
+   		   id:'tab-default',
+           title: "首页",
+           iconCls: 'tabs',
+		   //html:'<iframe src="/login.jsp" name="ifrmname" id="ifrm-tab-default" scrolling="auto" frameborder="0" width="100%" height="100%"></iframe>',
+		   html:'',
+           closable:true
+       }).show();
+     //菜单树定义start===================================================================================
+    	 var treeLoader= new Ext.tree.TreeLoader({//获取取数据
+           dataUrl:"treedata.js"
+       });
+       var menuTreePanel = new MenuTreePanel(treeLoader,centerTabPanel);
+       //menuTreePanel.render();
+       //菜单树定义end=====================================================================================
+
+       // tab generation code
+       
+       
+       //布局
+       var viewport = new Ext.Viewport({
+            layout:'border',
+            items:[ northPanel, southPanel, menuTreePanel, centerTabPanel]
+        });
+    });
 	</script>
 </head>
+<body>
+  <div id="treePanel"> </div>
+  <div id="west">
+  </div>
+  <div id="north"></div>
+  <div id="props-panel" style="width:200px;height:200px;overflow:hidden;">
+  </div>
+  <div id="south" style="text-align:center"> <p>Copyright© 2017-2020 YaoYouWei Corp</p> </div>
 
-<%
-	String result = (String)session.getAttribute("rightStr");
-	out.print("<script type='text/javascript'> var result = '"+result+"'</script>");
-
-%>
-<body> 
-	<div class = "ui-layout-north"><iframe src="<%=path %>/top.jsp" frameborder="NO" scrolling="NO"  width="100%" height="90"></iframe></div>
-	<div class = "ui-layout-west" >
-		<div id="accordion">
-			<div id="营销管理">
-				<h3><a href="#">营销管理</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/sale/loadAllSalChanceAction.action">销售机会管理</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/sale/loadAllDispatcheSalChanceAction.action">客户开发计划</a></li>
-					</ol>	
-				</div>
-			</div>
-			<div id="客户管理"  >
-				<h3><a href="#" >客户管理</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/cus/CstCustomerAction_loadCstCustomersByManager">客户信息管理</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/cus/CstLostAction_loadCstLostsByManager">客户流失管理</a></li>
-					</ol>	
-				</div>
-			</div>
-			<div id="服务管理"  >
-				<h3><a href="#">服务管理</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/service/CstServiceAction_toAddCstServicePage">服务创建</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/service/CstServiceAction_toDispatchCstServicePage">服务分配</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/service/CstServiceAction_toDealCstServicePage">服务处理</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/service/CstServiceAction_toFeedbackCstServicePage">服务反馈</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/service/CstServiceAction_toArchCstServicePage">服务归档</a></li>
-					</ol>	
-				</div>
-			</div>
-			<div id="统计报表"  >
-				<h3><a href="#">统计报表</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/rept/loadAllInstantCustomerAction.action">客户贡献分析</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/rept/loadAllCustConsAction.action?optionType=custLevel">客户构成分析</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/rept/loadAllInstantCustomerServiceAction.action">客户服务分析</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/rept/loadAllInstantCustomerLostAction.action">客户流失分析</a></li>
-					</ol>	
-				</div>
-			</div>
-			<div id="基础数据"  >
-				<h3><a href="#" >基础数据</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/basd/loadAllBasDictsAction.action" >数据字典管理</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/basd/loadAllProductAction.action">查询产品信息</a></li>
-						<li class="ui-widget-content"><a href="#" name="<%=path %>/basd/findProductAndStorageAction.action">查询库存</a></li>
-					</ol>	
-				</div>
-			</div>
-			<div id="权限管理">
-				<h3><a href="#">权限管理</a></h3>
-				<div>
-					<ol class="selectable">
-						<li class="ui-widget-content" ><a href="#" name="<%=path %>/sys/loadAllUsersAction.action?sysUserQueryDTO.opeartorType=search" >用户管理</a></li>
-						<li class="ui-widget-content" ><a href="#" name="<%=path %>/sys/loadAllRolesAction.action">角色管理</a></li>
-					</ol>	
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class = "ui-layout-center">
-		<iframe src="<%=path %>/mywork.jsp" width="100%" height="100%"  frameborder="NO" scrolling="yes"></iframe>
-	</div>
-</body>
+ </body>
 </html>
+

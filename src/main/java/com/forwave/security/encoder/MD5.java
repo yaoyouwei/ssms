@@ -73,6 +73,9 @@ public class MD5 {
 	 * 提供一个测试的主函数
 	 */
 	public static void main(String[] args) {
-		System.out.println("sa:" + getMD5ofStr("sasystem"));
+		//用户输入的密码为"sa",数据库保存的密码为 getMD5ofStr("sa"+盐值)
+		String pwd = "123";
+		String salt = "sys";
+		System.out.println(pwd+":" + getMD5ofStr(pwd+salt));
 	}
 }

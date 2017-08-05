@@ -14,9 +14,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <div class="login_main">
     <form  action="<%=path%>/loginForSpringSecurity"  method="post">
       <div>用户名:</div>
-      <div><input class="user_name" type="text" name="j_username" id="username" value=""  /></div>
+      <div><input class="user_name" type="text" name="username" id="username" value=""  /></div>
       <div>密码:</div>
-      <div><input class="user_pwd" type="password" name="j_password" id="password" /></div>
+      <div><input class="user_pwd" type="password" name="password" id="password" /></div>
       <div style="margin-top:20px"><input type="submit" id="rptLogin" value="登录" /></div>
     </form>
   </div>

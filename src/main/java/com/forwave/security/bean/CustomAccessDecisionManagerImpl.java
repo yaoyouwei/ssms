@@ -21,7 +21,7 @@ public class CustomAccessDecisionManagerImpl implements ICustomAccessDecisionMan
 	@Override
 	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException {
-		log.error("进入自定义决策器");
+		log.info("进入自定义决策器");
 		if (null == configAttributes) {
 			return;
 		}

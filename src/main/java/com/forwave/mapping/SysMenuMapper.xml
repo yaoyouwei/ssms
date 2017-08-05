@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forwave.dao.ISysMenuDao">
+		
+	<resultMap id="sysMenuResultMap" type="com.forwave.pojo.SysMenu">
+		<result property="id" column="id" />
+		<result property="pid" column="pid" />
+		<result property="text" column="text" />
+		<result property="url" column="url" />
+		<result property="leaf" column="leaf" />
+		<result property="iconCls" column="icon_cls" />
+		<result property="order" column="order" />
+		<result property="visible" column="visible" />
+	</resultMap>
+	
+	<!-- 要做权限控制,暂时不做 -->
+   	<select id="queryMenuList" parameterType="com.forwave.pojo.SysMenu" resultMap="sysMenuResultMap">
+         SELECT  * FROM sys_menu 
+        <where>
+           <if test='id != null and id !="" '>
+               and id = #{id}
+           </if>
+           <if test='text != null and text !="" '>
+               and text = #{text}
+           </if>
+           <if test='visible != null and visible !="" '>
+               and visible = #{visible}
+           </if>
+           <if test='enabled != null and enabled !="" '>
+               and enabled = #{enabled}
+           </if>
+           
+        </where> 
+    </select>
+    
+	
+	
+</mapper>

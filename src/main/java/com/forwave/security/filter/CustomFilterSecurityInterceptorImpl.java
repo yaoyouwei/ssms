@@ -2,7 +2,6 @@ package com.forwave.security.filter;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -20,7 +19,6 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Service;
 
-import com.forwave.security.bean.CustomFilterInvocationSecurityMetadataSourceImpl;
 
 @Service
 public class CustomFilterSecurityInterceptorImpl extends
@@ -33,14 +31,12 @@ public class CustomFilterSecurityInterceptorImpl extends
 		return securityMetadataSource;
 	}
 
-	public void setSecurityMetadataSource(
-			FilterInvocationSecurityMetadataSource securityMetadataSource) {
+	public void setSecurityMetadataSource( FilterInvocationSecurityMetadataSource securityMetadataSource) {
 		this.securityMetadataSource = securityMetadataSource;
 	}
 
 	@Override
-	public void setAccessDecisionManager(
-			AccessDecisionManager accessDecisionManager) {
+	public void setAccessDecisionManager( AccessDecisionManager accessDecisionManager) {
 		super.setAccessDecisionManager(accessDecisionManager);
 	}
 
@@ -51,10 +47,10 @@ public class CustomFilterSecurityInterceptorImpl extends
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		log.error("CustomFilterSecurityInterceptorImpl before doFilter");
+		log.info("CustomFilterSecurityInterceptorImpl before doFilter");
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, chain);
-		infoke(filterInvocation);
-		log.error("CustomFilterSecurityInterceptorImpl after doFilter");
+		invoke(filterInvocation);
+		log.info("CustomFilterSecurityInterceptorImpl after doFilter");
 	}
 
 	/**
@@ -63,7 +59,7 @@ public class CustomFilterSecurityInterceptorImpl extends
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void infoke(FilterInvocation filterInvocation) throws IOException, ServletException {
+	private void invoke(FilterInvocation filterInvocation) throws IOException, ServletException {
 		InterceptorStatusToken token = super.beforeInvocation(filterInvocation);
 
 		try {

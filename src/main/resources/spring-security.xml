@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<!-- <beans xmlns="http://www.springframework.org/schema/beans"
 xmlns:security="http://www.springframework.org/schema/security"
 xmlns:context="http://www.springframework.org/schema/context"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,92 +8,101 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd"> -->
+   
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+xmlns:beans="http://www.springframework.org/schema/beans"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/context  
         http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+        
 	<!-- 开启注解支持 -->
 	<context:annotation-config />
 	
-	<bean id="customInvocationSecurityMetadataSource" 
+	<beans:bean id="customInvocationSecurityMetadataSource" 
 	      class="com.forwave.security.bean.CustomFilterInvocationSecurityMetadataSourceImpl">
-	</bean>
+	</beans:bean>
 	
-	<bean id="customUserDetailsServiceImpl" 
+	<beans:bean id="customUserDetailsServiceImpl" 
 	      class="com.forwave.security.bean.CustomUserDetailsServiceImpl">
-	</bean>
+	</beans:bean>
 
-	<bean id="customAccessDecisionManagerImpl"
+	<beans:bean id="customAccessDecisionManagerImpl"
 		  class="com.forwave.security.bean.CustomAccessDecisionManagerImpl">
-	</bean>
+	</beans:bean>
 
-	<bean id="md5Encoder" class="com.forwave.security.encoder.MD5Encoder">
-	</bean>
+	<beans:bean id="md5Encoder" 
+		  class="com.forwave.security.encoder.MD5Encoder">
+	</beans:bean>
 
-	<bean id="customFilterSecurityInterceptorImpl"
+	<beans:bean id="customFilterSecurityInterceptorImpl"
 		class="com.forwave.security.filter.CustomFilterSecurityInterceptorImpl">
-		<property name="securityMetadataSource" ref="customInvocationSecurityMetadataSource"></property>
-		<property name="accessDecisionManager" ref="customAccessDecisionManagerImpl" />
-		<property name="authenticationManager" ref="authenticationManager"></property>
-	</bean>
+		<beans:property name="securityMetadataSource" ref="customInvocationSecurityMetadataSource" />
+		<beans:property name="accessDecisionManager" ref="customAccessDecisionManagerImpl" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
 
-	<security:http auto-config='true'>
-	    <security:csrf disabled="true"/>
+	<http auto-config='true'>
+	    <headers>
+		    <frame-options policy="SAMEORIGIN" />
+	    </headers>
+	    
+	    <csrf disabled="true"/>
+	    
 		<!-- 不要过滤图片等静态资源，其中**代表可以跨越目录，*不可以跨越目录。 access="IS_AUTHENTICATED_ANONYMOUSLY":表示匿名访问 
 			注：可以技持正则表达式 -->
 		<!-- 不拦截静态资源 -->
-		<security:intercept-url pattern="/images/**|/**/*.ico|/css/**|/script/**"
-			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/images/**|/**/*.ico|/css/**|/script/**"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<!-- 不拦截登录页面 -->
-		<security:intercept-url pattern="/login.jsp*|/prelogin.jsp*"
-			access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<security:intercept-url pattern="/index.jsp"
-			access="hasRole('sl')" />
+		<intercept-url pattern="/login.jsp*|/prelogin.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<!--hasRole('sl') 相当于 ROLE_sl 默认自带ROLE_前缀-->
+		<intercept-url pattern="/index.jsp" access="hasRole('sl')" />
 
 <!-- 
-		<security:intercept-url pattern="/jmx/*|/sys/*|/basd/*"
-			access="ROLE_ADMIN,ROLE_SUPER" />
-		<security:intercept-url pattern="/rept/*"
-			access="ROLE_MASTER,ROLE_SUPER" />
-		<security:intercept-url pattern="/sale/*"
-			access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
-		<security:intercept-url pattern="/cus/*|/~cust/cust/**"
-			access="ROLE_MAN,ROLE_SUPER" />
-		<security:intercept-url pattern="/service/*"
-			access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
+		<intercept-url pattern="/jmx/*|/sys/*|/basd/*"  access="ROLE_ADMIN,ROLE_SUPER" />
+		<intercept-url pattern="/rept/*"                access="ROLE_MASTER,ROLE_SUPER" />
+		<intercept-url pattern="/sale/*"                access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
+		<intercept-url pattern="/cus/*|/~cust/cust/**"  access="ROLE_MAN,ROLE_SUPER" />
+		<intercept-url pattern="/service/*"             access="ROLE_MASTER,ROLE_MAN,ROLE_SUPER" />
  -->
 
-		<security:custom-filter ref="customFilterSecurityInterceptorImpl"
-			before="FILTER_SECURITY_INTERCEPTOR" />
+		<custom-filter ref="customFilterSecurityInterceptorImpl" before="FILTER_SECURITY_INTERCEPTOR" />
 
 		<!-- 配置登录页面 -->
 		<!-- default-target-url:成功登陆后跳转页面. 
 		     login-page:默认指定的登录页面.
 		     authentication-failure-url:出错后跳转页面.
 		     login-processing-url:发送的登录请求  -->
-		<security:form-login default-target-url="/index.jsp"
+		<form-login default-target-url="/index.jsp"
 			login-page="/login.jsp" 
 			authentication-failure-url="/prelogin.jsp"
-		    login-processing-url="/loginForSpringSecurity" username-parameter="j_username" />
+		    login-processing-url="/loginForSpringSecurity" />
 		    
 		<!-- 控制session 的并发数量 -->
-		<security:session-management
-			session-fixation-protection="migrateSession">
-			<security:concurrency-control
-				max-sessions="1" expired-url="/prelogin.jsp" />
-		</security:session-management>
-	</security:http>
+		<session-management session-fixation-protection="migrateSession">
+			<concurrency-control max-sessions="1" expired-url="/prelogin.jsp" />
+		</session-management>
+	</http>
 
 	<!-- 配置认证管理器 -->
-	<security:authentication-manager alias="authenticationManager">
+	<authentication-manager alias="authenticationManager">
 	 <!--   
        authentication-provider 引用UserDetailsService实现类时使用user-service-ref属性;引用authentication实现类时，使用ref属性  
               这两个属性的区别在于    
+       user-service-ref：定义DaoAuthenticationProvider的bean注入到AuthenticationProvider的providers集合中， 
+                                                 并且DaoAuthenticationProvider的变量userDetailsService由user-service-ref依赖的bean注入。  
        ref：直接将ref依赖的bean注入到AuthenticationProvider的providers集合中    
-       user-service-ref：定义DaoAuthenticationProvider的bean注入到AuthenticationProvider的providers集合中， 并且DaoAuthenticationProvider的变量userDetailsService由user-service-ref依赖的bean注入。  
      --> 
-		<security:authentication-provider user-service-ref="customUserDetailsServiceImpl">
-			<!-- <security:password-encoder ref="md5Encoder">
-				<security:salt-source system-wide="system" />添加盐值，增强系统的安全性
-			</security:password-encoder> -->
-		</security:authentication-provider>
-	</security:authentication-manager>
+		<authentication-provider user-service-ref="customUserDetailsServiceImpl">
+			<!-- <password-encoder ref="md5Encoder">
+				<salt-source system-wide="system" />添加盐值，增强系统的安全性
+			</password-encoder> -->
+		</authentication-provider>
+	</authentication-manager>
 
-</beans>
+</beans:beans>   
