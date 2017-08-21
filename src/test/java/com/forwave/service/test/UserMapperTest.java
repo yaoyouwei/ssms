@@ -8,10 +8,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import com.forwave.pojo.SysUser;
-import com.forwave.service.ISysUserService;
+import com.yaoyouwei.pojo.SysUser;
+import com.yaoyouwei.service.ISysUserService;
 
-@ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
+@ContextConfiguration(locations = {"classpath:spring-mybatis.xml","classpath:spring-security.xml","spring-mvc.xml"})
 public class UserMapperTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Resource
     ISysUserService sysUserService;

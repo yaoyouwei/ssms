@@ -1,0 +1,10 @@
+2017年6月13日: SpringSecurity如何认证
+ 看源代码
+ 
+2017年6月14日: xml配置的角色读不出来?
+hasRole('sl') 相当于 ROLE_sl 默认自带ROLE_前缀,数据库中需要对应
+
+2017年6月18日:ifram中的页面无法显示 
+配置SpringSecurity(参考文档)
+<headers>  <frame-options policy="SAMEORIGIN" /> </headers>
+

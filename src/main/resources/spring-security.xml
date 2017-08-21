@@ -25,23 +25,23 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 	<context:annotation-config />
 	
 	<beans:bean id="customInvocationSecurityMetadataSource" 
-	      class="com.forwave.security.bean.CustomFilterInvocationSecurityMetadataSourceImpl">
+	      class="com.yaoyouwei.security.bean.CustomFilterInvocationSecurityMetadataSourceImpl">
 	</beans:bean>
 	
 	<beans:bean id="customUserDetailsServiceImpl" 
-	      class="com.forwave.security.bean.CustomUserDetailsServiceImpl">
+	      class="com.yaoyouwei.security.bean.CustomUserDetailsServiceImpl">
 	</beans:bean>
 
 	<beans:bean id="customAccessDecisionManagerImpl"
-		  class="com.forwave.security.bean.CustomAccessDecisionManagerImpl">
+		  class="com.yaoyouwei.security.bean.CustomAccessDecisionManagerImpl">
 	</beans:bean>
 
 	<beans:bean id="md5Encoder" 
-		  class="com.forwave.security.encoder.MD5Encoder">
+		  class="com.yaoyouwei.security.encoder.MD5Encoder">
 	</beans:bean>
 
 	<beans:bean id="customFilterSecurityInterceptorImpl"
-		class="com.forwave.security.filter.CustomFilterSecurityInterceptorImpl">
+		class="com.yaoyouwei.security.filter.CustomFilterSecurityInterceptorImpl">
 		<beans:property name="securityMetadataSource" ref="customInvocationSecurityMetadataSource" />
 		<beans:property name="accessDecisionManager" ref="customAccessDecisionManagerImpl" />
 		<beans:property name="authenticationManager" ref="authenticationManager" />

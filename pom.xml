@@ -94,6 +94,26 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${springsecurity.version}</version>
 		</dependency>
+		<!-- spring aop -->
+		<!-- https://mvnrepository.com/artifact/aspectj/aspectjweaver -->
+		<dependency>
+		    <groupId>aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>1.5.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/aspectj/aspectjrt -->
+		<dependency>
+		    <groupId>aspectj</groupId>
+		    <artifactId>aspectjrt</artifactId>
+		    <version>1.5.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/cglib/cglib -->
+		<dependency>
+		    <groupId>cglib</groupId>
+		    <artifactId>cglib</artifactId>
+		    <version>3.2.2</version>
+		</dependency>
+		
 		
 		<!-- mybatis核心包 -->
 		<dependency>
@@ -137,7 +157,7 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		<!-- 映入JSON -->
+		<!-- JSON -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>

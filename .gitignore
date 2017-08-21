@@ -1,6 +1,9 @@
-!.gitignore
-target/
-.externalToolBuilders
 .settings
+.externalToolBuilders
+classes/
+target/
+# Eclipse artifacts
 .classpath
 .project
+!.pom
+!.gitignore

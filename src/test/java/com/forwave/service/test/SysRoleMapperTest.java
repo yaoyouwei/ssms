@@ -9,9 +9,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import com.forwave.pojo.SysRole;
-import com.forwave.pojo.SysUser;
-import com.forwave.service.ISysRoleService;
+import com.yaoyouwei.pojo.SysRole;
+import com.yaoyouwei.pojo.SysUser;
+import com.yaoyouwei.service.ISysRoleService;
 
 @ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
 public class SysRoleMapperTest extends AbstractTransactionalJUnit4SpringContextTests {

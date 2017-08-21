@@ -9,10 +9,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import com.forwave.dto.SysPermissionDto;
-import com.forwave.pojo.SysPermission;
-import com.forwave.pojo.SysRole;
-import com.forwave.service.ISysPermissionService;
+import com.yaoyouwei.dto.SysPermissionDto;
+import com.yaoyouwei.pojo.SysPermission;
+import com.yaoyouwei.pojo.SysRole;
+import com.yaoyouwei.service.ISysPermissionService;
 
 @ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
 public class SysPermissionMapperTest extends AbstractTransactionalJUnit4SpringContextTests {
