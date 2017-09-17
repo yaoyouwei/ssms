@@ -14,6 +14,7 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.yaoyouwei" />
+	<!-- <aop:aspectj-autoproxy/> -->
 	<!-- 引入配置文件 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -59,18 +60,5 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="logExecutionTime"
-		class="com.yaoyouwei.spring.aop.LogExecutionTime">
-	</bean>
-	
-	 <aop:config>
-        <aop:aspect ref="logExecutionTime">
-            <aop:pointcut id="userServiecPointcut"
-                expression="execution(** com.yaoyouwei.service.impl.SysUserServiceImpl.queryUserByLoginId(..))"/>
-            <aop:around pointcut-ref="userServiecPointcut"
-                method="logExecTime"/>
-
-        </aop:aspect>
-    </aop:config>
 
 </beans>

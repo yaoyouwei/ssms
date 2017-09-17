@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	<!-- 自动扫描(在spring-mybatis.xml中已经配置) -->
+	<!-- <context:component-scan base-package="com.yaoyouwei" /> -->
+	
+	<!-- 启用AspectJ自动代理,在代码中使用@Aspect注解标记切面 -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- 使用xml配置aop -->
+	<!-- 切面类 -->
+	<bean id="logExecutionTime" class="com.yaoyouwei.spring.aop.xml.LogExecutionTime"></bean>
+	<aop:config>
+        <aop:aspect ref="logExecutionTime">
+            <aop:pointcut id="userServiecPointcut"
+                expression="execution(* com.yaoyouwei.service.impl.SysUserServiceImpl.queryUserByLoginId(..))"/>
+            <aop:around pointcut-ref="userServiecPointcut"  method="logExecTime"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

@@ -1,5 +1,7 @@
-package com.yaoyouwei.spring.aop;
+package com.yaoyouwei.spring.aop.xml;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 /** 
@@ -10,23 +12,25 @@ import org.aspectj.lang.ProceedingJoinPoint;
  */
 
 public class LogExecutionTime {
-
 	
+	private static Log logger = LogFactory.getLog(LogExecutionTime.class);
 	
-	public void logExecTime(ProceedingJoinPoint jp){
+	public Object logExecTime(ProceedingJoinPoint jp){
+		Object obj = null;
 		try {
 			long start = System.currentTimeMillis(); 
-			jp.proceed();
+			obj = jp.proceed();
 			long end = System.currentTimeMillis();		
 			String executionTime = (end - start) + "ms";		
 			if(end - start > 1000){
 				executionTime = (end - start) / 1000 + "s";
 			}
-			System.out.println("=============================aop 测试花费时间:"+executionTime);
+			logger.info("=============================aop 测试花费时间:"+executionTime);
 		} catch (Throwable e) {
-			System.out.println("=============================aop方法异常");
+			logger.info("=============================aop方法异常");
 			e.printStackTrace();
 		}
+		return obj;
 	}
 
 }

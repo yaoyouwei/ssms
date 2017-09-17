@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.forwave.dao.ISysRoleDao">
+<mapper namespace="com.yaoyouwei.dao.ISysRoleDao">
 	
-	<resultMap id="sysRoleResultMap" type="com.forwave.pojo.SysRole">
+	<resultMap id="sysRoleResultMap" type="com.yaoyouwei.pojo.SysRole">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
 		<result property="roleSecurity" column="role_security" />
@@ -11,7 +11,7 @@
 		<result property="lastUpdateDate" column="last_update_date" />
 	</resultMap>
 	
-	<select id="queryRoleListByUser" parameterType="com.forwave.pojo.SysUser" resultMap="sysRoleResultMap">
+	<select id="queryRoleListByUser" parameterType="com.yaoyouwei.pojo.SysUser" resultMap="sysRoleResultMap">
          SELECT r.* FROM sys_role r 
 		 INNER JOIN  sys_role_user ru ON r.id=ru.role_id
 		 INNER JOIN sys_user u  ON u.id= ru.user_id
@@ -28,7 +28,7 @@
         </where> 
     </select>
     
-   	<select id="queryRoleList" parameterType="com.forwave.pojo.SysRole" resultMap="sysRoleResultMap">
+   	<select id="queryRoleList" parameterType="com.yaoyouwei.pojo.SysRole" resultMap="sysRoleResultMap">
          SELECT  * FROM sys_role 
         <where>
            <if test='id != null and id !="" '>

@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import com.yaoyouwei.pojo.SysUser;
 import com.yaoyouwei.service.ISysUserService;
 
-@ContextConfiguration(locations = {"classpath:spring-mybatis.xml","classpath:spring-security.xml","spring-mvc.xml"})
+@ContextConfiguration(locations = {"classpath:spring-mybatis.xml","classpath:spring-security.xml","classpath:spring-aop.xml"})
 public class UserMapperTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Resource
     ISysUserService sysUserService;
