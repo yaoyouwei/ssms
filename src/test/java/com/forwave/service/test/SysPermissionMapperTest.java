@@ -10,11 +10,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import com.yaoyouwei.dto.SysPermissionDto;
-import com.yaoyouwei.pojo.SysPermission;
 import com.yaoyouwei.pojo.SysRole;
 import com.yaoyouwei.service.ISysPermissionService;
 
-@ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
+@ContextConfiguration(locations = {"classpath:spring-mybatis.xml","classpath:spring-security.xml"})
 public class SysPermissionMapperTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Resource
     ISysPermissionService sysPermissionService;

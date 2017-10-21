@@ -14,28 +14,25 @@ import org.springframework.security.core.GrantedAuthority;
 public class CustomAccessDecisionManagerImpl implements ICustomAccessDecisionManager {
 	private static Log log = LogFactory.getLog(CustomAccessDecisionManagerImpl.class);
 	/**
-	 * 思路:如果该页面不需要权限访问,则直接结束
-	 * authentication:用户的权限
-	 * configAttributes:访问该资源所需要的权限
+	 * 如果该页面不需要权限访问,则直接结束
+	 * authentication:用户的权限(角色)
+	 * configAttributes:访问该资源所需要的权限(角色)
 	 */
 	@Override
 	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException {
-		log.info("进入自定义决策器");
+		log.info("进入自定义决策器,判断用户的角色是否存在于访问当前资源所需要的角色中");
 		if (null == configAttributes) {
 			return;
 		}
-
 		//访问该uri所需要的角色列表
-		Iterator<ConfigAttribute> cons = configAttributes.iterator();
-
-		while (cons.hasNext()) {
-			ConfigAttribute ca = cons.next();
-			String needRole = ((SecurityConfig) ca).getAttribute();//访问该资源所需要的权限
-			for (GrantedAuthority gra : authentication.getAuthorities()) {//gra:该用户拥有的权限
-				if (needRole.trim().equals(gra.getAuthority().trim())) {
-					//放行
-					return;
+		Iterator<ConfigAttribute> configAttributeItr = configAttributes.iterator();
+		while (configAttributeItr.hasNext()) {
+			ConfigAttribute configAttribute = configAttributeItr.next();
+			String needRole = ((SecurityConfig) configAttribute).getAttribute();//访问该资源所需要角色
+			for (GrantedAuthority ownRole : authentication.getAuthorities()) {//该用户拥有的角色
+				if (needRole.trim().equals(ownRole.getAuthority().trim())) {
+					return;//放行
 				}
 			}
 		}

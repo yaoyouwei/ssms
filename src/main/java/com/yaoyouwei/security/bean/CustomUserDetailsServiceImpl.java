@@ -18,6 +18,10 @@ import com.yaoyouwei.pojo.SysRole;
 import com.yaoyouwei.pojo.SysUser;
 import com.yaoyouwei.service.ISysRoleService;
 import com.yaoyouwei.service.ISysUserService;
+/**
+ * 获取用户以及用户的角色信息
+ * @author yaoyouwei
+ */
 public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	private static Log log = LogFactory.getLog(CustomUserDetailsServiceImpl.class);
 
@@ -40,7 +44,11 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 		return user;
 	}
 
-	// 取得用户的权限
+	/**
+	 * 获取用户拥有的角色
+	 * @param user
+	 * @return
+	 */
 	private Set<GrantedAuthority> obtionGrantedAuthorities(SysUser user) {
 		Set<GrantedAuthority> grantedAuthoritySet = new HashSet<GrantedAuthority>();
 		List<SysRole> roles = roleService.queryRoleListByUser(user);

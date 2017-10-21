@@ -18,6 +18,7 @@ public class SysUser implements UserDetails {
 	private String name;
 	private String password;
 	private int delFlag;
+	//用户拥有的角色
 	private Collection<? extends GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
 	public void setId(String id){

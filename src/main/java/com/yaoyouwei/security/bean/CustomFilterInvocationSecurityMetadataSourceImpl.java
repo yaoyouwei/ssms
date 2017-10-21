@@ -21,6 +21,11 @@ import com.yaoyouwei.pojo.SysRole;
 import com.yaoyouwei.service.ISysPermissionService;
 import com.yaoyouwei.service.ISysRoleService;
 
+/**
+ * 从数据库中获取 权限-角色  的对应关系
+ * 根据权限获取对应的角色
+ * @author yaoyouwei
+ */
 public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustomFilterInvocationSecurityMetadataSource {
 	private static Log log = LogFactory.getLog(CustomFilterInvocationSecurityMetadataSourceImpl.class);
     @Resource
@@ -28,7 +33,7 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
     @Resource
 	private ISysPermissionService sysPermissionService;
 
-	// key:url, value:角色
+	//权限-角色  的对应关系; key:url, value:角色
 	private HashMap<String, Collection<ConfigAttribute>> resourceMap = null;
 
 	/**
@@ -42,7 +47,7 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 
 	/**
 	 * 
-	 * TODO(程序启动的时候就加载所有资源信息).
+	 * (程序启动的时候就加载所有资源信息).
 	 */
 	private void loadResourceDefine() {
 		log.info("初始化url-roles Map");
@@ -53,10 +58,11 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 		resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
 
 		for (SysRole role : roles) {
-			
-			ConfigAttribute ca = new SecurityConfig(role.getRoleSecurity());// 角色名:ROLE_XXXX--value
+			//角色
+			ConfigAttribute configAttribute = new SecurityConfig(role.getRoleSecurity());// 角色名:ROLE_XXXX--value
 			List<SysPermissionDto> permissions = sysPermissionService.queryPermissionListByRole(role);// 获得所有的权限(uri)
 
+			//每个角色拥有的权限
 			for (SysPermissionDto permission : permissions) {
 				String url = permission.getUrl();// uri作为key
 				/*
@@ -65,40 +71,32 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 				 * ROLE_AdMIN  index.jsp
 				 * ROLE_MAN    index.jsp
 				 * map<index.jsp, [ROLE_AdMIN,ROLE_MAN]>
-				 * 。
 				 */
 				if (resourceMap.containsKey(url)) {
 					//获得原来的集合
-					Collection<ConfigAttribute> value = resourceMap.get(url);
-					value.add(ca);
-					resourceMap.put(url, value);
+					Collection<ConfigAttribute> configAttributes = resourceMap.get(url);
+					configAttributes.add(configAttribute);
+					resourceMap.put(url, configAttributes);
 				} else {//首次添加的key
-					Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
-					atts.add(ca);
-					resourceMap.put(url, atts);
+					Collection<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
+					configAttributes.add(configAttribute);
+					resourceMap.put(url, configAttributes);
 				}
 			}
 		}
 		//调试代码 
+		System.out.println("=========权限:角色=====================");
 		log.info(resourceMap);
 		Iterator<Entry<String,Collection<ConfigAttribute>>> it = resourceMap.entrySet().iterator();
 		while(it.hasNext()){
 			Entry<String,Collection<ConfigAttribute>> entry = it.next();
 			String url = entry.getKey();
-			System.out.println("==============================");
-			System.out.println("url: "+url);
-			Collection<ConfigAttribute> cas = entry.getValue();
-			for(ConfigAttribute ca :cas){
-				System.out.println("\t"+ca.getAttribute());
-			}
+			System.out.println(url+":"+entry.getValue());
 		}
 
 	}
 
-	@Override
-	public Collection<ConfigAttribute> getAllConfigAttributes() {
-		return null;
-	}
+
 
 	/**
 	 * 根据用户访问的uri，加载该uri所需要角色列表　
@@ -141,6 +139,11 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
+	}
+	
+	@Override
+	public Collection<ConfigAttribute> getAllConfigAttributes() {
+		return null;
 	}
 
 	
