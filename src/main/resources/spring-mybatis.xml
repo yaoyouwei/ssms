@@ -70,7 +70,7 @@
     -->
     <!-- 集成Mybatis[end] -->
     
-    <!-- 集成Mybatis-plus[begin] -->
+    <!-- ============================================================集成Mybatis-plus[begin] ============================================================ -->
 	<bean id="sqlSessionFactory"
 		class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
 		<!-- 配置数据源 -->
@@ -88,17 +88,19 @@
 		<!-- 插件配置 -->
 		<property name="plugins">
 			<array>
-				 <!-- 如需要开启其他插件，可配置于此 -->
-				 <!-- 分页插件配置 -->
+				<!-- 分页插件配置 -->
                 <bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
                     <property name="dialectType" value="mysql"/>
                 </bean>
-                <!-- SQL 执行性能分析，开发环境使用，线上不推荐。 maxTime 指的是 sql 最大执行时长 -->
+                <!-- SQL 执行性能分析，开发环境使用，线上不推荐。 -->
                 <bean id="performanceInterceptor" class="com.baomidou.mybatisplus.plugins.PerformanceInterceptor">
+                     <!--SQL 最大执行时长 -->
                      <property name="maxTime" value="100" />
-			         <!--SQL是否格式化 默认false-->
+			         <!-- SQL是否格式化 默认false -->
 			         <property name="format" value="false" />
                 </bean>
+                
+                 <!-- 如需要开启其他插件，可配置于此 -->
 			</array>
 		</property>
 		<!-- MP 全局配置注入 -->
@@ -124,7 +126,7 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.yaoyouwei.dao"/>
     </bean>
-    <!-- 集成Mybatis-plus[begin] -->
+    <!-- ============================================================集成Mybatis-plus[end] ============================================================ -->
     
     
     <!-- 配置事务管理 -->
