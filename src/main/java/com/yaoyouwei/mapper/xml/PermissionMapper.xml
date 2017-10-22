@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaoyouwei.dao.IPermissionDao">
+
+	<select id="queryPermissionListByRole" parameterType="com.yaoyouwei.entity.Role" resultType="Permission">
+        SELECT DISTINCT p.id,p.actionId,m.url FROM  menu m 
+		INNER JOIN  permission p ON p.actionId = m.id AND p.type=1
+		INNER JOIN  role_permission rp ON  p.id=rp.permissionId
+		INNER JOIN  role r ON r.id=rp.roleId 
+        <where>
+           <if test='id != null and id !="" '>
+               and r.id = #{id}
+           </if>
+           <if test='enabled != null and enabled !="" '>
+               and r.enabled = #{enabled}
+           </if>
+        </where> 
+    </select>
+
+</mapper>

@@ -24,7 +24,7 @@
 	<aop:config>
         <aop:aspect ref="logExecutionTime">
             <aop:pointcut id="userServiecPointcut"
-                expression="execution(* com.yaoyouwei.service.impl.SysUserServiceImpl.queryUserByLoginId(..))"/>
+                expression="execution(* com.yaoyouwei.service.impl.UserServiceImpl.queryUserByLoginId(..))"/>
             <aop:around pointcut-ref="userServiecPointcut"  method="logExecTime"/>
         </aop:aspect>
     </aop:config>

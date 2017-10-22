@@ -2,12 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
                         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
                         http://www.springframework.org/schema/context  
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
                         http://www.springframework.org/schema/aop
                         http://www.springframework.org/schema/aop/spring-aop.xsd
                         http://www.springframework.org/schema/mvc  
@@ -48,27 +51,117 @@
 		<!-- 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100 -->
 		<property name="maxOpenPreparedStatements" value="-1" />
 	</bean>
-
+	
+    <!-- 集成Mybatis[begin] -->
 	<!-- spring和MyBatis整合，不需要mybatis的配置映射文件 -->
+	<!-- 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<!-- 加载Mybaties配置,若果没有可以忽略这行,不需要配置 -->
 	    <property name="configLocation" value="classpath:mybatis-config.xml"></property>
-		<!-- 自动扫描mapping.xml文件 -->
 		<property name="mapperLocations" value="classpath:com/yaoyouwei/mapping/*.xml"></property>
 	</bean>
-
+    -->
 	<!-- DAO接口所在包名，Spring会自动查找其下的类 (就是MyBatis的Mapper文件对应的接口所在的包名)-->
+	<!--  
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.yaoyouwei.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
-
-	<!-- (事务管理) 数据源需要相同 -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    -->
+    <!-- 集成Mybatis[end] -->
+    
+    <!-- 集成Mybatis-plus[begin] -->
+	<bean id="sqlSessionFactory"
+		class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+		<!-- 配置数据源 -->
 		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描 Xml 文件位置 -->
+		<property name="mapperLocations" value="classpath:com/yaoyouwei/mapper/xml/*.xml" />
+		<!-- 配置 Mybatis 配置文件（可无） -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 配置包别名，支持通配符 * 或者 ; 分割 -->
+		<property name="typeAliasesPackage" value="com.yaoyouwei.entity" />
+		<!-- 枚举属性配置扫描，支持通配符 * 或者 ; 分割 -->
+		<!-- <property name="typeEnumsPackage" value="com.baomidou.springmvc.entity.*.enums" /> -->
+		<!-- 以上配置和传统 Mybatis 一致 -->
+
+		<!-- 插件配置 -->
+		<property name="plugins">
+			<array>
+				 <!-- 如需要开启其他插件，可配置于此 -->
+				 <!-- 分页插件配置 -->
+                <bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+                    <property name="dialectType" value="mysql"/>
+                </bean>
+                <!-- SQL 执行性能分析，开发环境使用，线上不推荐。 maxTime 指的是 sql 最大执行时长 -->
+                <bean id="performanceInterceptor" class="com.baomidou.mybatisplus.plugins.PerformanceInterceptor">
+                     <property name="maxTime" value="100" />
+			         <!--SQL是否格式化 默认false-->
+			         <property name="format" value="false" />
+                </bean>
+			</array>
+		</property>
+		<!-- MP 全局配置注入 -->
+		<property name="globalConfig" ref="globalConfig" />
 	</bean>
+
+	<!-- 定义 MP 全局策略 -->
+	<bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
+		<!-- 主键策略配置 -->
+		<!-- 可选参数 AUTO->`0`("数据库ID自增") INPUT->`1`(用户输入ID") ID_WORKER->`2`("全局唯一ID") 
+			UUID->`3`("全局唯一ID") -->
+		<property name="idType" value="2" />
+
+		<!-- 数据库类型配置 -->
+		<!-- 可选参数（默认mysql） MYSQL->`mysql` ORACLE->`oracle` DB2->`db2` H2->`h2` 
+			HSQL->`hsql` SQLITE->`sqlite` POSTGRE->`postgresql` SQLSERVER2005->`sqlserver2005` 
+			SQLSERVER->`sqlserver` -->
+		<property name="dbType" value="mysql" />
+		<!-- 全局表为下划线命名设置 true -->
+		<property name="dbColumnUnderline" value="false" />
+	</bean>
+	<!-- MyBatis 动态扫描  -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.yaoyouwei.dao"/>
+    </bean>
+    <!-- 集成Mybatis-plus[begin] -->
+    
+    
+    <!-- 配置事务管理 -->
+    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 事务管理 属性 -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="append*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="modify*" propagation="REQUIRED"/>
+            <tx:method name="edit*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="remove*" propagation="REQUIRED"/>
+            <tx:method name="repair" propagation="REQUIRED"/>
+
+            <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="search*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="datagrid*" propagation="REQUIRED" read-only="true"/>
+
+            <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置切面 -->
+    <aop:config>
+        <aop:pointcut id="transactionPointcut" expression="execution(* com.yaoyouwei.service..*.*(..))"/>
+        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
+    </aop:config>
+	
 	
 
 </beans>

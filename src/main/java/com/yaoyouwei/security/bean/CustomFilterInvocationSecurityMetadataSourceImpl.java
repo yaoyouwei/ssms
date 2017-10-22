@@ -16,10 +16,10 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 
-import com.yaoyouwei.dto.SysPermissionDto;
-import com.yaoyouwei.pojo.SysRole;
-import com.yaoyouwei.service.ISysPermissionService;
-import com.yaoyouwei.service.ISysRoleService;
+import com.yaoyouwei.entity.Permission;
+import com.yaoyouwei.entity.Role;
+import com.yaoyouwei.service.IPermissionService;
+import com.yaoyouwei.service.IRoleService;
 
 /**
  * 从数据库中获取 权限-角色  的对应关系
@@ -29,9 +29,9 @@ import com.yaoyouwei.service.ISysRoleService;
 public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustomFilterInvocationSecurityMetadataSource {
 	private static Log log = LogFactory.getLog(CustomFilterInvocationSecurityMetadataSourceImpl.class);
     @Resource
-	private ISysRoleService sysRoleService;
+	private IRoleService roleService;
     @Resource
-	private ISysPermissionService sysPermissionService;
+	private IPermissionService permissionService;
 
 	//权限-角色  的对应关系; key:url, value:角色
 	private HashMap<String, Collection<ConfigAttribute>> resourceMap = null;
@@ -52,18 +52,18 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 	private void loadResourceDefine() {
 		log.info("初始化url-roles Map");
 		// 在Web服务器启动时，获取系统所有权限
-		List <SysRole> roles = sysRoleService.queryAllRoleList();
+		List <Role> roles = roleService.queryAllRoleList();
 		
 		//资源url为key， 角色名称的集合为value,角色名称就是那些以ROLE_为前缀的值
 		resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
 
-		for (SysRole role : roles) {
+		for (Role role : roles) {
 			//角色
 			ConfigAttribute configAttribute = new SecurityConfig(role.getRoleSecurity());// 角色名:ROLE_XXXX--value
-			List<SysPermissionDto> permissions = sysPermissionService.queryPermissionListByRole(role);// 获得所有的权限(uri)
+			List<Permission> permissions = permissionService.queryPermissionListByRole(role);// 获得所有的权限(uri)
 
 			//每个角色拥有的权限
-			for (SysPermissionDto permission : permissions) {
+			for (Permission permission : permissions) {
 				String url = permission.getUrl();// uri作为key
 				/*
 				 * 判断资源文件和权限的对应关系，如果已经存在相关的资源url，则要通过该url为key提取出权限集合，将权限增加到权限集合中

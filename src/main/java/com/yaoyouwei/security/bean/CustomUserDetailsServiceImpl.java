@@ -14,10 +14,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.yaoyouwei.pojo.SysRole;
-import com.yaoyouwei.pojo.SysUser;
-import com.yaoyouwei.service.ISysRoleService;
-import com.yaoyouwei.service.ISysUserService;
+import com.yaoyouwei.entity.Role;
+import com.yaoyouwei.entity.User;
+import com.yaoyouwei.service.IRoleService;
+import com.yaoyouwei.service.IUserService;
 /**
  * 获取用户以及用户的角色信息
  * @author yaoyouwei
@@ -26,15 +26,15 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	private static Log log = LogFactory.getLog(CustomUserDetailsServiceImpl.class);
 
     @Resource
-	private ISysRoleService roleService;
+	private IRoleService roleService;
     @Resource
-   	private ISysUserService sysUserService;
+   	private IUserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String loginUserName)
 			throws UsernameNotFoundException {
 		log.info("开始验证用户:["+loginUserName+"]");
-		SysUser user = sysUserService.queryUserByLoginId(loginUserName);
+		User user = userService.queryUserByLoginId(loginUserName);
 		if(user == null){
 			throw new UsernameNotFoundException("用户不存在!");
 		}
@@ -49,11 +49,11 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	 * @param user
 	 * @return
 	 */
-	private Set<GrantedAuthority> obtionGrantedAuthorities(SysUser user) {
+	private Set<GrantedAuthority> obtionGrantedAuthorities(User user) {
 		Set<GrantedAuthority> grantedAuthoritySet = new HashSet<GrantedAuthority>();
-		List<SysRole> roles = roleService.queryRoleListByUser(user);
+		List<Role> roles = roleService.queryRoleListByUser(user);
 		//存在我们的角色列表
-		for(SysRole role:roles){
+		for(Role role:roles){
 			grantedAuthoritySet.add(new SimpleGrantedAuthority(role.getRoleSecurity()));
 		}
 		return grantedAuthoritySet;

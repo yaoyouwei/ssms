@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaoyouwei.dao.IRoleDao">
+
+	<select id="queryRoleListByUser" parameterType="User"  resultType="Role">
+         SELECT r.* FROM  role r 
+		 INNER JOIN   role_user ru ON r.id=ru.roleId
+		 INNER JOIN  user u  ON u.id= ru.userId
+        <where>
+           <if test='id != null and id !="" '>
+               and u.id = #{id}
+           </if>
+           <if test='name != null and name !="" '>
+               and u.name = #{name}
+           </if>
+           <if test='delFlag != null and delFlag !="" '>
+               and u.delFlag = #{delFlag}
+           </if>
+        </where> 
+    </select>
+
+</mapper>

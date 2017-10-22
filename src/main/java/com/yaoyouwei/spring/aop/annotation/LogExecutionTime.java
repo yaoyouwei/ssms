@@ -22,7 +22,7 @@ public class LogExecutionTime {
 	
 	private static Log logger = LogFactory.getLog(LogExecutionTime.class);
 	
-	@Pointcut("execution(* com.yaoyouwei.service.impl.SysUserServiceImpl.queryUserByLoginId(..))")
+	@Pointcut("execution(* com.yaoyouwei.service.impl.UserServiceImpl.queryUserByLoginId(..))")
 	public void log(){}
 	
 	@Around("log()")

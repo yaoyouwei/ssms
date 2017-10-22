@@ -1,10 +1,8 @@
 package com.yaoyouwei.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,16 +10,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yaoyouwei.common.utils.Constant;
-import com.yaoyouwei.dto.UserDto;
-import com.yaoyouwei.pojo.User;
-import com.yaoyouwei.service.ISysUserService;
+import com.yaoyouwei.entity.User;
+import com.yaoyouwei.service.IUserService;
 
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author yaoyouwei
+ * @since 2017-10-22
+ */
 @Controller
-@RequestMapping({ "user/mgnt" })
+@RequestMapping("/user")
 public class UserController{
 	//private static Log logger = LogFactory.getLog(UserController.class);
     //@Resource
-    ISysUserService userService;
+    IUserService userService;
 
 	@RequestMapping(value={ "list.do" }, params = { "r_showUserList" })
 	public String listContact(ModelMap mm) {
@@ -107,7 +112,7 @@ public class UserController{
 	
 	@ResponseBody
 	@RequestMapping(value = { "list.do" }, params = { "r_queryUserList"})
-	public Map<String,Object> getUserMapList(UserDto user,ModelMap mm) {
+	public Map<String,Object> getUserMapList(User user,ModelMap mm) {
 		Map<String,Object> result = new HashMap<String,Object>();
 	    try {
 	    	result.put(Constant.SUCCESS, true);
@@ -118,11 +123,4 @@ public class UserController{
 		}
 		return result;
 	}
-	
-
-
-
-
-	
-
 }
