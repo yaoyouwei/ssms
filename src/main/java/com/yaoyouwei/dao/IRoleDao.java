@@ -15,5 +15,5 @@ import com.yaoyouwei.entity.User;
  * @since 2017-10-22
  */
 public interface IRoleDao extends BaseMapper<Role> {
-	public List<Role> queryRoleListByUser(User user);
+	public List<Role> selectByUser(User user);
 }

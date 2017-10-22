@@ -16,6 +16,6 @@ import com.yaoyouwei.entity.Role;
  */
 public interface IPermissionDao extends BaseMapper<Permission> {
 	
-	List<Permission> queryPermissionListByRole(Role role);
+	List<Permission> selectByRole(Role role);
 
 }

@@ -24,7 +24,7 @@ public class PermissionServiceTest extends AbstractTransactionalJUnit4SpringCont
         Role roleQuery = new Role();
         roleQuery.setName("司令");
         roleQuery.setEnabled(1);
-        List<Permission> rights = permissionService.queryPermissionListByRole(roleQuery);
+        List<Permission> rights = permissionService.selectByRole(roleQuery);
         for(Permission right:rights){
         	System.out.println(right);
         }

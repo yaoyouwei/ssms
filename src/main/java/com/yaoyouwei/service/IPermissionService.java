@@ -15,5 +15,5 @@ import com.yaoyouwei.entity.Role;
  * @since 2017-10-22
  */
 public interface IPermissionService extends IService<Permission> {
-	List <Permission> queryPermissionListByRole(Role role);
+	List <Permission> selectByRole(Role role);
 }

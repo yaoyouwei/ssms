@@ -16,6 +16,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.yaoyouwei.entity.Permission;
 import com.yaoyouwei.entity.Role;
 import com.yaoyouwei.service.IPermissionService;
@@ -52,7 +53,7 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 	private void loadResourceDefine() {
 		log.info("初始化url-roles Map");
 		// 在Web服务器启动时，获取系统所有权限
-		List <Role> roles = roleService.queryAllRoleList();
+		List <Role> roles = roleService.selectList(new EntityWrapper<Role>());
 		
 		//资源url为key， 角色名称的集合为value,角色名称就是那些以ROLE_为前缀的值
 		resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
@@ -60,7 +61,7 @@ public class CustomFilterInvocationSecurityMetadataSourceImpl implements ICustom
 		for (Role role : roles) {
 			//角色
 			ConfigAttribute configAttribute = new SecurityConfig(role.getRoleSecurity());// 角色名:ROLE_XXXX--value
-			List<Permission> permissions = permissionService.queryPermissionListByRole(role);// 获得所有的权限(uri)
+			List<Permission> permissions = permissionService.selectByRole(role);// 获得所有的权限(uri)
 
 			//每个角色拥有的权限
 			for (Permission permission : permissions) {

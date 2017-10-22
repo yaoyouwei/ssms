@@ -2,8 +2,6 @@ package com.yaoyouwei.service.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -22,12 +20,10 @@ import com.yaoyouwei.service.IPermissionService;
  */
 @Service
 public class PermissionServiceImpl extends ServiceImpl<IPermissionDao, Permission> implements IPermissionService {
-    @Resource
-    IPermissionDao permissionDao;
     
 	@Override
-	public List<Permission> queryPermissionListByRole(Role role) {
-		List<Permission> list = permissionDao.queryPermissionListByRole(role);
+	public List<Permission> selectByRole(Role role) {
+		List<Permission> list = super.baseMapper.selectByRole(role);
 		return list;
 	}
 	

@@ -10,40 +10,53 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.yaoyouwei.entity.User;
 
-@ContextConfiguration(locations = {"classpath:spring-mybatis.xml","classpath:spring-security.xml","classpath:spring-aop.xml"})
+@ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
 public class UserServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Resource
-    IUserService userService;
-
+    IUserService us;
+    
     @Test
     @Rollback(false) //控制回滚
-    public void queryUser() throws Exception {
-        
-        User user = new User();
-        user.setId("01");
-        user.setName("Alan");
-        user.setDelFlag(0);
-        user.setLoginId("Alan");
-        List<User> userList = userService.queryUser(user);
-        for(User u:userList){
-        	System.out.println(u);
-        }
+    public void testSelectPage() throws Exception {
+    	Page<User> p = new Page<User>(2,5);
+    	Page<User> page = us.selectPage(p);
+    	//EntityWrapper<User> ew = new EntityWrapper<User>();
+    	List<User> users = page.getRecords();
+    	for(User u:users){
+    		System.out.println(u);
+    	}
+    	
     }
+
     
     @Test
     @Rollback(false) //控制回滚
     public void queryUserByLoginId() throws Exception {
-        User user = userService.queryUserByLoginId("Alan");
+        User user = us.selectByLoginId("Alan");
         System.out.println(user);
     }
     
+    
+    
     @Test
     @Rollback(false) //控制回滚
-    public void queryUserById() throws Exception {
-    	User user = userService.queryUserById("01");
-    	System.out.println(user);
+    public void testInsert() throws Exception {
+    	User user = new User();
+    	user.setId("123456789");
+    	user.setName("yaoyouwei");
+    	user.setDelFlag(0);
+    	user.setLoginId("yaoyouwei");
+    	user.setPassword("1234");
+    	us.insert(user);
+    	EntityWrapper<User> ew = new EntityWrapper<User>(user);
+    	User ui = us.selectOne(ew);
+    	System.out.println(ui);
     }
+    
+    
   
 }

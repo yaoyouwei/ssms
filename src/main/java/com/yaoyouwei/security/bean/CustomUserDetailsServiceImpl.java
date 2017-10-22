@@ -34,7 +34,7 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	public UserDetails loadUserByUsername(String loginUserName)
 			throws UsernameNotFoundException {
 		log.info("开始验证用户:["+loginUserName+"]");
-		User user = userService.queryUserByLoginId(loginUserName);
+		User user = userService.selectByLoginId(loginUserName);
 		if(user == null){
 			throw new UsernameNotFoundException("用户不存在!");
 		}
@@ -51,7 +51,7 @@ public class CustomUserDetailsServiceImpl implements ICustomUserDetailsService {
 	 */
 	private Set<GrantedAuthority> obtionGrantedAuthorities(User user) {
 		Set<GrantedAuthority> grantedAuthoritySet = new HashSet<GrantedAuthority>();
-		List<Role> roles = roleService.queryRoleListByUser(user);
+		List<Role> roles = roleService.selectByUser(user);
 		//存在我们的角色列表
 		for(Role role:roles){
 			grantedAuthoritySet.add(new SimpleGrantedAuthority(role.getRoleSecurity()));
